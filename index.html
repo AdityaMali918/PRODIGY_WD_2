@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #stopwatch {
+            text-align: center;
+            font-size: 2em;
+        }
+
+        #controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #lap-times {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="stopwatch" style="margin: 10px;">0:00</div>
+<div id="controls">
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="pauseStopwatch()">Pause</button>
+    <button onclick="resetStopwatch()">Reset</button>
+    <button onclick="lapTime()">Lap</button>
+</div>
+<div id="lap-times"></div>
+
+<script>
+    let timer;
+    let isRunning = false;
+    let seconds = 0;
+    let lapTimes = [];
+    
+    function startStopwatch() {
+        if (!isRunning) {
+            isRunning = true;
+            timer = setInterval(updateStopwatch, 1000);
+        }
+    }
+
+    function pauseStopwatch() {
+        isRunning = false;
+        clearInterval(timer);
+    }
+
+    function resetStopwatch() {
+        isRunning = false;
+        clearInterval(timer);
+        seconds = 0;
+        lapTimes = [];
+        updateStopwatch();
+        updateLapTimes();
+    }
+
+    function lapTime() {
+        if (isRunning) {
+            lapTimes.push(seconds);
+            updateLapTimes();
+        }
+    }
+
+    function updateStopwatch() {
+        const minutes = Math.floor(seconds / 60);
+        const remainderSeconds = seconds % 60;
+        document.getElementById('stopwatch').innerText = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+        seconds++;
+    }
+
+    function updateLapTimes() {
+        const lapTimesContainer = document.getElementById('lap-times');
+        lapTimesContainer.innerHTML = "<strong>Lap Times:</strong><br>";
+        lapTimes.forEach((lap, index) => {
+            const minutes = Math.floor(lap / 60);
+            const remainderSeconds = lap % 60;
+            lapTimesContainer.innerHTML += `${index + 1}: ${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}<br>`;
+        });
+    }
+</script>
+
+</body>
+</html>
